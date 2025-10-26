@@ -7,10 +7,10 @@ Group 5 - Project Proposal Link
 - https://docs.google.com/document/d/1C1Fj5pqExZpKPn4mpm2bcv4sN5IOBOHy_f1UPy8jEzI/edit?usp=sharing
 
 
-Members Contribution (As of October 25, 2025):
-- Park - Figma UI/UX  Prototype
-- Joven - UML Diagram
-- Bacus - Dashboard Page
-- Gargaritano - Borrow Page
-- Tampus - Research
-- Velasquez - Login/Signup Page
+Members: 
+- Park, Chang Hyun
+- Joven, Rakim
+- Bacus, Romulo
+- Gargaritano, Edieson
+- Tampus, Jevric
+- Velasquez, Jeremy
