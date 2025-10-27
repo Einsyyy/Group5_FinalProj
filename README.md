@@ -8,6 +8,9 @@
 ## 📋Project Proposal Link
 [View project proposal](https://docs.google.com/document/d/1C1Fj5pqExZpKPn4mpm2bcv4sN5IOBOHy_f1UPy8jEzI/edit?usp=sharing)
 
+## Figma Prototype Link
+[View Figma Prototype](https://www.figma.com/design/n0EnTU04S89XkaVkO9EXfT/Untitled?node-id=2-55&t=KCDde4V3du0Zy3dX-1)
+
 ---
 
 
