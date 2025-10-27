@@ -79,7 +79,8 @@
     - **Official Borrow Form**
         - So after mo iconfirm yung cart mo, lalabas na etong borrow form, kita na diyan yung name, student no, prof in charge, as well as yung reference number
         - Sa **reference number**, iggenerate siya after mag confirm sa cart overview, bale need nlng ng random generator to make it unique every transaction.
-     
+---
+
 ### TAMPUS:
 - **History**
     - **Search Bar Feature**
