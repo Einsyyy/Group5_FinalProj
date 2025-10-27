@@ -24,7 +24,7 @@
 
 ## Task Distribution
 
-- JOVEN:
+### JOVEN:
 - **Login/Signup/UML**
     - **UML**
         - Adjust accordingly sa UI/UX ng figma natin
@@ -35,6 +35,28 @@
         - Need na niya ng form validation
         - Option to sign up as a student, faculty, or admin.
         - Sa signup, maglagay ng First Name, Last Name, as well as Student number.
+---
+
+### VELASQUEZ:
+- **About Us/Help Page**
+    - **About Us**
+        - Description kung about san yung project natin
+        - Picture ng mga members (Formal mas better parang 2x2 lang)
+        - Names ng members na rin
+
+    - **Help Page**
+        - Patulong kay Joven about dito, mainly mga FAQs on how ginagamit yung system natin
+        - Atleast mga 6-8 questions and answers to those siguro would suffice.
+---
+
+### GARGARITANO:
+- **Dashboard**
+      - **Status Update**
+          - Pwede maview yung latest transactions (Request, For approval, Claimed)
+          - Need na visible yung mga info such as kung ano ung mga hiniram, sino yung prof, ano oras hiniram, pati kung kelan tapos nung time.
+      - **Notification**
+          - Hawak siya ni admin and faculty kung ano update sa mga pending na borrow forms
+          - Announce if merong notice na ipapaalam sa students such as if magkakaron ng maintenance, or may mga bagong gamit na available na sa toolroom.
       
     
 - About Us/Help - Velasquez 
@@ -43,4 +65,4 @@
 - Cart - Bacus
 - History - Tampus
 
-#
+
