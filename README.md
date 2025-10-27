@@ -24,10 +24,11 @@
 
 ## Task Distribution
 
-- Login/Signup - Velasquez
-- About Us/Help - Gargaritano
+- Login/Signup/UML- Joven
+- About Us/Help - Velasquez 
+- Dashboard - Gargaritano
 - Borrow - Park
-- Cart - Joven
-- History - Bacus
+- Cart - Bacus
+- History - Tampus
 
 ## NOTES
