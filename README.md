@@ -11,10 +11,18 @@
 ---
 
 
-## 👤Group 5 Members: 
+## 👤Group 5 Members
 - **Park, Chang Hyun**
 - **Joven, Rakim**
 - **Bacus, Romulo**
 - **Gargaritano, Edieson**
 - **Tampus, Jevric**
 - **Velasquez, Jeremy**
+
+## Task Distribution
+
+- Login/Signup - Velasquez
+- About Us/Help - Gargaritano
+- Borrow - Park
+- Cart - Joven
+- History - Bacus
