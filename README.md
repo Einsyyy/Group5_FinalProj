@@ -24,11 +24,14 @@
 
 ## Task Distribution
 
-- Login/Signup/UML- Joven
+- JOVEN:
+- Login/Signup/UML
+    - UML - Adjust accordingly sa UI/UX ng figma natin, revise yung mga classes na hindi na need such as yung database, as for the access modifiers wala nmn comment si sir kanina so okay nmn na siguro.
+    - Login - Need na niya ng form validation, as well as yung option to sign up as a student, faculty, or admin.
 - About Us/Help - Velasquez 
 - Dashboard - Gargaritano
 - Borrow - Park
 - Cart - Bacus
 - History - Tampus
 
-## NOTES
+#
