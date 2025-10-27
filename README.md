@@ -51,12 +51,12 @@
 
 ### GARGARITANO:
 - **Dashboard**
-      - **Status Update**
-          - Pwede maview yung latest transactions (Request, For approval, Claimed)
-          - Need na visible yung mga info such as kung ano ung mga hiniram, sino yung prof, ano oras hiniram, pati kung kelan tapos nung time.
-      - **Notification**
-          - Hawak siya ni admin and faculty kung ano update sa mga pending na borrow forms
-          - Announce if merong notice na ipapaalam sa students such as if magkakaron ng maintenance, or may mga bagong gamit na available na sa toolroom.
+    - **Status Update**
+        - Pwede maview yung latest transactions (Request, For approval, Claimed)
+        - Need na visible yung mga info such as kung ano ung mga hiniram, sino yung prof, ano oras hiniram, pati kung kelan tapos nung time.
+    - **Notification**
+        - Hawak siya ni admin and faculty kung ano update sa mga pending na borrow forms
+        - Announce if merong notice na ipapaalam sa students such as if magkakaron ng maintenance, or may mga bagong gamit na available na sa toolroom.
       
     
 - About Us/Help - Velasquez 
