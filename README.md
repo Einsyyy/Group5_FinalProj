@@ -54,15 +54,37 @@
     - **Status Update**
         - Pwede maview yung latest transactions (Request, For approval, Claimed)
         - Need na visible yung mga info such as kung ano ung mga hiniram, sino yung prof, ano oras hiniram, pati kung kelan tapos nung time.
+          
     - **Notification**
         - Hawak siya ni admin and faculty kung ano update sa mga pending na borrow forms
         - Announce if merong notice na ipapaalam sa students such as if magkakaron ng maintenance, or may mga bagong gamit na available na sa toolroom.
-      
-    
-- About Us/Help - Velasquez 
-- Dashboard - Gargaritano
-- Borrow - Park
-- Cart - Bacus
-- History - Tampus
+---
 
+### BACUS:
+- **Cart**
+    - **Cart**
+        - Makikita lahat dito ng inadd to cart na items from the departments
+        - Suggested here ni sir is pwedeng humiram ng gamit from multiple departments, lalagyan nlng label from where siya
+        - Meron siyang option to **edit** and **confirm**
+          
+    - **Edit Cart**
+        - Dito nmn is hahayaan yung user (student) na mag edit if may gusto siya tanggalin sa list ganon, or iadd, makikita nmn sa figma yung sample
+        - Then Ayun pwede mong iclose (X) or click **confirm** if okay na yung edit mo
+          
+    - **Cart Overview**
+        - Pag nag confirm na si user sa mga items na need niya, ireredirect na siya sa page na to, bale sa cart overview, ito yung parang pinaka verification if sure ka nasa mga hihiramin mong gamit
+        - May option parin diyan to **edit** or **confirm** if sure na
+        - Makikita na din diyan yung **professor in charge** so make sure na meron diyan, dropdown button siya so ippresent yung list of faculty for that.
+
+    - **Official Borrow Form**
+        - So after mo iconfirm yung cart mo, lalabas na etong borrow form, kita na diyan yung name, student no, prof in charge, as well as yung reference number
+        - Sa **reference number**, iggenerate siya after mag confirm sa cart overview, bale need nlng ng random generator to make it unique every transaction.
+     
+### TAMPUS:
+- **History**
+    - **Search Bar Feature**
+        - May database tayo for the transactions so ang gusto ni sir mangyari dito is allowed na magsearch and magsort depende sa gusto ni user
+        - Allowed magsearch according to **date, department, sinong prof, etc**
+        - Makikita lahat ng transactions na nacomplete here
+    
 
