@@ -1,0 +1,33 @@
+{
+  "Files": [
+    {
+      "Id": "/workspaces/Group5_FinalProj/Group5/obj/Debug/net8.0/scopedcss/projectbundle/Group5.bundle.scp.css",
+      "PackagePath": "staticwebassets/Group5.bundle.scp.css"
+    },
+    {
+      "Id": "/workspaces/Group5_FinalProj/Group5/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/workspaces/Group5_FinalProj/Group5/wwwroot/images/EN BLDG.png",
+      "PackagePath": "staticwebassets/images/EN BLDG.png"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Group5.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.Group5.props",
+      "PackagePath": "build\\Group5.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.Group5.props",
+      "PackagePath": "buildMultiTargeting\\Group5.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.Group5.props",
+      "PackagePath": "buildTransitive\\Group5.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
