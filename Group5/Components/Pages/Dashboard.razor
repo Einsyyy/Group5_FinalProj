@@ -1,0 +1,296 @@
+@page "/dashboard"
+
+<div class="layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="profile-section">
+            <h3>Hello, User!!</h3>
+            <div class="profile-pic">
+                <div class="user-icon">👤</div>
+            </div>
+            <button class="logout-btn">Log Out</button>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="/dashboard" class="nav-item active">> Dashboard</a>
+            <a href="/borrow" class="nav-item">> Borrow</a>
+            <a href="/cart" class="nav-item">> Cart</a>
+            <a href="/history" class="nav-item">> History</a>
+        </nav>
+
+        <div class="footer-links">
+            <a href="#">User Profile</a>
+            <a href="#">Need help?</a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <header class="top-header">
+            <h1><span class="icon">📊</span> DASHBOARD</h1>
+            <span class="email">pogiako@ue.edu.ph</span>
+        </header>
+
+        <hr class="divider" />
+
+        <section class="notice">
+            <h3>Notice:</h3>
+            <p>Toolroom maintenance this weekend — borrowing unavailable.</p>
+        </section>
+
+        <section class="dashboard-cards">
+            <!-- STATUS UPDATE CARD -->
+            <a href="#" class="card">
+                <h3>STATUS UPDATE</h3>
+                <ul>
+                    <li>Request: Clamp - Pending Approval</li>
+                    <li>Claimed: Meter Stick (Prof. Edie) - Returned 10/25</li>
+                    <li>For Approval: Measuring Tape - Requested 10/27</li>
+                </ul>
+            </a>
+
+            <!-- NOTIFICATIONS CARD -->
+            <a href="#" class="card">
+                <h3>NOTIFICATIONS</h3>
+                <ul>
+                    <li>New items: Power Drill, Pliers Set</li>
+                    <li>Maintenance: Oct 30, 2025</li>
+                    <li>Borrow form update pending review.</li>
+                </ul>
+            </a>
+        </section>
+    </main>
+</div>
+
+<style>
+/* === Layout === */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Sidebar === */
+.sidebar {
+    width: 280px;
+    background: linear-gradient(to bottom, #a00000, #7a0000);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.profile-section h3 {
+    margin: 0 0 18px 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.user-icon {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.logout-btn {
+    background: white;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logout-btn:hover {
+    background: #f0f0f0;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-menu {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 18px 0;
+}
+
+.nav-item {
+    display: block;
+    background: transparent;
+    color: white;
+    padding: 16px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.nav-item.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-left-color: white;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-links a {
+    color: white;
+    font-size: 1rem;
+    text-decoration: underline;
+    transition: opacity 0.3s ease;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+
+/* === Main Content === */
+.main-content {
+    flex: 1;
+    padding: 30px 40px;
+    background-color: #fff;
+    overflow-y: auto;
+}
+
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.top-header h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    color: #333;
+}
+
+.top-header .icon {
+    font-size: 1.8rem;
+}
+
+.email {
+    color: #666;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.divider {
+    border: none;
+    height: 3px;
+    background: linear-gradient(to right, #a00000, #c00000);
+    margin: 0 0 30px 0;
+    border-radius: 2px;
+}
+
+/* === Notice Section === */
+.notice {
+    background: linear-gradient(135deg, #a00000, #c00000);
+    color: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(160, 0, 0, 0.2);
+}
+
+.notice h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.notice p {
+    margin: 0;
+}
+
+/* === Dashboard Cards === */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.card {
+    background-color: #b30000;
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    text-decoration: none;
+    transition: transform 0.2s, background 0.3s;
+    box-shadow: 0 4px 15px rgba(160, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+    background-color: #8b0000;
+    transform: scale(1.03);
+}
+
+.card h3 {
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid white;
+}
+
+.card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.card li {
+    margin: 6px 0;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+</style>
+
