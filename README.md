@@ -1101,17 +1101,4 @@ Feel free to fork, modify, and improve this project for educational purposes!
 - **Purpose:** Educational - Learning C# web development
 - **Institution:** University of the East (UE)
 
-## 🚨 Important Links
-
-- **Figma** - [Design Mockups](#) *(Add your Figma link)*
-- **UML** - [System Design](#) *(Add your UML diagram link)*
-- **Logo** - [University Logo](#) *(Add your logo link)*
-
----
-
-Thank you for using UTMS!
-
-**Built with ❤️ for learning and development**
-
-*University of the East - Engineering Toolroom Management System*
 
