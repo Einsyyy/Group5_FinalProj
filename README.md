@@ -1,762 +1,1117 @@
-# Group5_FinalProj
-
-**UE - CALOOCAN: Engineering Borrowing System**
-- The purpose of this proposal is to provide a system for borrowing materials from different departments in a more organized and efficient way. It allows the process of borrowing materials faster and easier to manage for both the students and administrators.
-
----
-
-## 📋Project Proposal Link
-[View project proposal](https://docs.google.com/document/d/1C1Fj5pqExZpKPn4mpm2bcv4sN5IOBOHy_f1UPy8jEzI/edit?usp=sharing)
-
-## Figma Prototype Link
-[View Figma Prototype](https://www.figma.com/design/n0EnTU04S89XkaVkO9EXfT/Untitled?node-id=2-55&t=KCDde4V3du0Zy3dX-1)
-
----
-# Engineering Borrowing System
-
-A Blazor Server application for managing laboratory tool borrowing across engineering departments at the University of the East - Caloocan. Features role-based access control, inventory management, and a complete borrowing workflow from request to return.
-
----
-
-## 🏗️ Project Structure
-
-### System Architecture
-
-```
-Group5/
-├── Components/
-│   ├── Pages/
-│   │   ├── Auth/
-│   │   │   ├── Home.razor              # Login Page (/)
-│   │   │   ├── Signup.razor            # Registration Page (/signup)
-│   │   │   ├── VerifyEmail.razor       # Email Verification (/verify-email)
-│   │   │   ├── ForgotPassword.razor    # Password Reset Request (/forgot-password)
-│   │   │   ├── VerifyResetCode.razor   # Reset Code Verification (/verify-reset-code)
-│   │   │   └── ResetPassword.razor     # Password Reset (/reset-password)
-│   │   ├── Students/
-│   │   │   ├── StudentDashboard.razor  # Student Dashboard (/studentdashboard)
-│   │   │   ├── StudentBorrow.razor      # Browse Departments (/studentborrow)
-│   │   │   ├── Cart.razor              # Shopping Cart (/cart)
-│   │   │   ├── StudentHistory.razor    # Borrowing History (/studenthistory)
-│   │   │   ├── ECE.razor               # Electronics Toolroom (/electronics)
-│   │   │   ├── EE.razor                # Electrical Toolroom (/electrical)
-│   │   │   ├── CHEM.razor              # Chemistry Lab (/chemistry)
-│   │   │   ├── CE.razor                # Civil Engineering (/civil)
-│   │   │   └── P6.razor                # Physics Lab (/physics)
-│   │   ├── Professor/
-│   │   │   ├── ProfessorDashboard.razor # Professor Dashboard (/professordashboard)
-│   │   │   └── ProfessorForms.razor     # Pending Forms (/professorforms)
-│   │   ├── Admin/
-│   │   │   ├── AdminDashboard.razor    # Admin Dashboard (/admindashboard)
-│   │   │   ├── AdminForms.razor         # Approve Forms (/adminforms)
-│   │   │   ├── AdminHistory.razor       # Borrowing History (/adminhistory)
-│   │   │   ├── AdminStock.razor         # Inventory Management (/adminstock)
-│   │   │   ├── AdminIssue.razor         # Issue Items (/adminissue)
-│   │   │   ├── AdminReturns.razor       # Process Returns (/adminreturns)
-│   │   │   ├── VerifyBorrowList.razor   # Verify Request (/verifyborrowlist)
-│   │   │   ├── OfficialBorrowList.razor # Official Records (/officialborrowlist)
-│   │   │   ├── ViewDatabase.razor       # Database View (/viewdatabase)
-│   │   │   └── AdminItems.razor         # Item Management (/adminitems)
-│   │   ├── Base/
-│   │   │   ├── BasePage.cs             # Base class for all pages
-│   │   │   ├── BaseToolroomPage.cs     # Base for toolroom pages
-│   │   │   └── BaseAdminPage.cs        # Base for admin pages
-│   │   └── Shared/
-│   │       ├── Aboutus.razor            # About Page (/about-us)
-│   │       ├── Help.razor               # Help Page (/help)
-│   │       └── Error.razor              # Error Handling (/Error)
-│   ├── Layout/
-│   │   └── MainLayout.razor             # Main Application Layout
-│   ├── Routes.razor                     # Routing Configuration
-│   ├── App.razor                        # Root Application Component
-│   └── _Imports.razor                   # Global Using Statements
-├── Models/
-│   ├── User.cs                          # User Account Model
-│   ├── InventoryItem.cs                 # Tool/Item Model
-│   ├── BorrowForm.cs                    # Borrow Request Model
-│   ├── BorrowFormItem.cs                # Items in Borrow Form
-│   ├── CartItem.cs                      # Shopping Cart Item
-│   ├── BorrowedItem.cs                  # Issued Item Record
-│   ├── OfficialBorrowListRecord.cs      # Official Borrow Record
-│   ├── TempSignup.cs                    # Temporary Signup Data
-│   └── VerificationCode.cs              # Email Verification Codes
-├── Data/
-│   ├── AppDbContext.cs                  # Entity Framework Context
-│   └── Repositories/
-│       ├── IRepository.cs               # Generic Repository Interface
-│       ├── Repository.cs                 # Generic Repository Implementation
-│       ├── IInventoryRepository.cs      # Inventory Repository Interface
-│       └── InventoryRepository.cs       # Inventory Repository Implementation
-├── Services/
-│   ├── Interfaces/
-│   │   ├── IEmailService.cs             # Email Service Interface
-│   │   └── IInventoryService.cs         # Inventory Service Interface
-│   ├── EmailService.cs                   # SMTP Email Service
-│   ├── InventoryService.cs               # Inventory Management Service
-│   ├── Business/
-│   │   ├── CartManager.cs               # Shopping Cart Logic
-│   │   └── BorrowManager.cs             # Borrow Request Logic
-│   └── Helpers/
-│       └── SecurityHelper.cs             # Password Hashing & Validation
-├── Shared/
-│   ├── UserSession.cs                    # Session Management
-│   └── UserDatabase.cs                  # Shared Static Data
-├── wwwroot/
-│   ├── images/
-│   │   └── Apparatus/                   # Tool Images by Department
-│   ├── css/
-│   │   ├── admin-modern.css             # Admin Page Styles
-│   │   └── shared-auth.css              # Auth Page Styles
-│   └── app.css                          # Application Styles
-├── Program.cs                            # Application Configuration & Startup
-└── README.md                             # This File
-```
-
----
-
-## 🔄 Routing System
-
-### Page Route Configuration
-
-| Page | Route | Component | Purpose |
-|------|-------|-----------|---------|
-| **Authentication** |
-| Login | `/` | Home.razor | Primary authentication entry point |
-| Signup | `/signup` | Signup.razor | User registration form |
-| Verify Email | `/verify-email` | VerifyEmail.razor | Email verification |
-| Forgot Password | `/forgot-password` | ForgotPassword.razor | Password reset request |
-| Verify Reset Code | `/verify-reset-code` | VerifyResetCode.razor | Reset code verification |
-| Reset Password | `/reset-password` | ResetPassword.razor | New password entry |
-| **Student Pages** |
-| Dashboard | `/studentdashboard` | StudentDashboard.razor | Student home page |
-| Browse | `/studentborrow` | StudentBorrow.razor | Department selection |
-| Cart | `/cart` | Cart.razor | Shopping cart review |
-| History | `/studenthistory` | StudentHistory.razor | Borrowing history |
-| Electronics | `/electronics` | ECE.razor | Electronics toolroom |
-| Electrical | `/electrical` | EE.razor | Electrical toolroom |
-| Chemistry | `/chemistry` | CHEM.razor | Chemistry laboratory |
-| Civil | `/civil` | CE.razor | Civil engineering toolroom |
-| Physics | `/physics` | P6.razor | Physics laboratory |
-| **Professor Pages** |
-| Dashboard | `/professordashboard` | ProfessorDashboard.razor | Professor home page |
-| Forms | `/professorforms` | ProfessorForms.razor | Review pending requests |
-| **Admin Pages** |
-| Dashboard | `/admindashboard` | AdminDashboard.razor | Admin home page |
-| Forms | `/adminforms` | AdminForms.razor | Approve/issue items |
-| History | `/adminhistory` | AdminHistory.razor | Complete history |
-| Stock | `/adminstock` | AdminStock.razor | Inventory management |
-| Issue | `/adminissue` | AdminIssue.razor | Issue items to students |
-| Returns | `/adminreturns` | AdminReturns.razor | Process item returns |
-| Verify | `/verifyborrowlist` | VerifyBorrowList.razor | Verify borrow request |
-| Official List | `/officialborrowlist` | OfficialBorrowList.razor | Official records |
-| Database | `/viewdatabase` | ViewDatabase.razor | Database viewer |
-| Items | `/adminitems` | AdminItems.razor | Item management |
-| **Shared Pages** |
-| About | `/about-us` | Aboutus.razor | System information |
-| Help | `/help` | Help.razor | User guide |
-| Error | `/Error` | Error.razor | Error handling |
-
-### Routing Implementation
-
-**Routes.razor - Central Routing Configuration**
-
-```razor
-<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
-        <FocusOnNavigate RouteData="routeData" Selector="h1" />
-    </Found>
-    <NotFound>
-        <LayoutView Layout="typeof(Layout.MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
-```
-
-**Key Features:**
-- ✅ **Assembly Scanning**: Automatically discovers all `@page` directives
-- ✅ **Layout Application**: Applies MainLayout to all pages
-- ✅ **Focus Management**: Sets focus to `<h1>` elements for accessibility
-- ✅ **404 Handling**: Graceful handling of invalid routes
-- ✅ **Role-Based Access**: Pages check user roles before rendering
-
-**Navigation Service - Programmatic Routing**
-
-```csharp
-@inject NavigationManager Navigation
-
-private void NavigateToDashboard()
-{
-    if (UserSession.Role == "Student")
-        Navigation.NavigateTo("/studentdashboard", forceLoad: true);
-    else if (UserSession.Role == "Professor")
-        Navigation.NavigateTo("/professordashboard", forceLoad: true);
-    else if (UserSession.Role == "Admin")
-        Navigation.NavigateTo("/admindashboard", forceLoad: true);
-}
-```
-
-**Navigation Features:**
-- ✅ **Role-Based Routing**: Automatic redirection based on user role
-- ✅ **Force Reload**: `forceLoad: true` ensures fresh page load
-- ✅ **Session Validation**: Checks authentication before navigation
-- ✅ **Error Handling**: Try-catch blocks for navigation errors
-
----
-
-## 🎨 UI/UX Design Structure
-
-### Current Implementation Analysis
-
-**✅ Strengths**
-- Modern gradient-based design system
-- Consistent color scheme (Red theme: #9B1B30)
-- Responsive sidebar navigation
-- Professional card-based layouts
-- Smooth animations and transitions
-- Role-specific dashboards
-- Interactive hover effects
-- Clear visual hierarchy
-
-**🎯 Design Principles Applied**
-
-### 1. Modern Layout Design
-
-**Sidebar Navigation Structure**
-
-```razor
-<aside class="sidebar">
-    <div class="profile-section">
-        <h3>Hello, @displayedUsername!</h3>
-        <div class="profile-pic">
-            <img src="/images/ENLOGO.png" alt="EN Logo" />
-        </div>
-        <button class="logout-btn" @onclick="LogoutAsync">Log Out</button>
-    </div>
-    <nav class="nav-menu">
-        <a href="/studentdashboard" class="nav-item active">Dashboard</a>
-        <a href="/studentborrow" class="nav-item">Borrow</a>
-        <a href="/cart" class="nav-item">Cart</a>
-        <a href="/studenthistory" class="nav-item">History</a>
-    </nav>
-</aside>
-```
-
-**Recommended CSS Structure**
-
-```css
-.sidebar {
-    position: fixed;
-    width: 280px;
-    height: 100vh;
-    background: linear-gradient(180deg, #9B1B30 0%, #6B0F1A 50%, #4A0000 100%);
-    color: white;
-    box-shadow: 6px 0 32px rgba(0, 0, 0, 0.25);
-}
-
-.nav-item {
-    padding: 16px 20px;
-    border-radius: 10px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.nav-item:hover {
-    background: rgba(255, 255, 255, 0.12);
-    padding-left: 28px;
-}
-```
-
-### 2. Enhanced Form Design
-
-**Modern Input Fields with Validation**
-
-```razor
-<div class="form-group">
-    <label>Student Name</label>
-    <input type="text" value="@studentName" readonly class="readonly-input" />
-    <span class="field-hint">Auto-filled from your account</span>
-</div>
-
-<div class="professor-selection">
-    <label>👨‍🏫 Select Professor for Approval</label>
-    <select @bind="selectedProfessorEmail" class="professor-dropdown">
-        <option value="">-- Choose a professor --</option>
-        @foreach (var prof in allProfessors)
-        {
-            <option value="@prof.Email">@prof.Name (@prof.Email)</option>
-        }
-    </select>
-</div>
-```
-
-**Input Validation States**
-
-```css
-.form-input {
-    padding: 14px 18px;
-    border: 2px solid #dee2e6;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #9B1B30;
-    box-shadow: 0 0 0 4px rgba(155, 27, 48, 0.1);
-}
-
-.readonly-input {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    cursor: not-allowed;
-}
-```
-
-### 3. Interactive Feedback System
-
-**Loading States**
-
-```razor
-<button 
-    @onclick="SubmitBorrowRequest" 
-    class="btn-confirm"
-    disabled="@(isSubmitting || string.IsNullOrEmpty(selectedProfessorEmail))">
-    @(isSubmitting ? "⏳ SUBMITTING..." : "✅ SUBMIT FOR APPROVAL")
-</button>
-```
-
-**Status Messages**
-
-```razor
-@if (!string.IsNullOrEmpty(message))
-{
-    <div class="message @(message.Contains("Error") ? "error" : "success")">
-        @message
-    </div>
-}
-```
-
-**Notice Section**
-
-```razor
-<section class="notice">
-    <h3>📢 Notice:</h3>
-    <p>@UserDatabase.Notice</p>
-</section>
-```
-
-### 4. Responsive Design Principles
-
-**Mobile-First Approach**
-
-```css
-/* Mobile First (320px+) */
-.main-content {
-    margin-left: 0;
-    padding: 20px;
-}
-
-/* Tablet (768px+) */
-@media (min-width: 768px) {
-    .main-content {
-        margin-left: 280px;
-        padding: 30px 40px;
-    }
-}
-
-/* Desktop (1024px+) */
-@media (min-width: 1024px) {
-    .main-content {
-        padding: 40px 60px;
-    }
-}
-```
-
-### 5. Accessibility Enhancements
-
-**ARIA Labels and Screen Reader Support**
-
-```razor
-<form role="form" aria-labelledby="borrow-title">
-    <h1 id="borrow-title">BORROW REQUEST FORM</h1>
-    
-    <div class="form-group">
-        <label for="professor">Select Professor</label>
-        <select 
-            id="professor"
-            aria-required="true"
-            aria-describedby="professor-hint"
-            @bind="selectedProfessorEmail">
-        </select>
-        <span id="professor-hint" class="field-hint">
-            Select the professor who will approve your request
-        </span>
-    </div>
-</form>
-```
-
-### 6. Advanced Animation and Transitions
-
-**Page Transitions**
-
-```css
-.toolroom-card {
-    animation: fadeIn 0.5s ease-out;
-}
-
-.toolroom-card:nth-child(1) { animation-delay: 0.1s; }
-.toolroom-card:nth-child(2) { animation-delay: 0.2s; }
-.toolroom-card:nth-child(3) { animation-delay: 0.3s; }
-```
-
-**Micro-Interactions**
-
-```css
-.btn-confirm {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.btn-confirm:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-}
-
-.btn-confirm:active {
-    transform: translateY(0);
-}
-```
-
----
-
-## 🚀 Implementation Guide
-
-### Step 1: Enhanced Styling
-
-**Custom CSS Variables for Consistent Theming**
-
-```css
-:root {
-    --primary-red: #9B1B30;
-    --primary-red-dark: #6B0F1A;
-    --primary-red-darker: #4A0000;
-    --success-green: #10b981;
-    --warning-yellow: #fbbf24;
-    --error-red: #ef4444;
-    --sidebar-width: 280px;
-}
-```
-
-### Step 2: Form Validation
-
-```csharp
-private bool ValidateBorrowRequest()
-{
-    bool isValid = true;
-    
-    if (string.IsNullOrWhiteSpace(selectedProfessorEmail))
-    {
-        message = "Error: Please select a professor to review your request.";
-        isValid = false;
-    }
-    
-    if (cartItems == null || !cartItems.Any())
-    {
-        message = "Error: Your cart is empty.";
-        isValid = false;
-    }
-    
-    return isValid;
-}
-```
-
-### Step 3: State Management
-
-**Session Management**
-
-```csharp
-public static class UserSession
-{
-    private static ConcurrentDictionary<string, SessionData> _sessions = new();
-    
-    public static string Email
-    {
-        get => GetSessionValue("Email") ?? string.Empty;
-        set => SetSessionValue("Email", value);
-    }
-    
-    public static string Username
-    {
-        get => GetSessionValue("Username") ?? string.Empty;
-        set => SetSessionValue("Username", value);
-    }
-    
-    public static string Role
-    {
-        get => GetSessionValue("Role") ?? string.Empty;
-        set => SetSessionValue("Role", value);
-    }
-}
-```
-
-### Step 4: Security Enhancements
-
-- ✅ **Password Hashing**: BCrypt with salt rounds
-- ✅ **Email Verification**: Required for account creation
-- ✅ **CSRF Protection**: Built into Blazor Server
-- ✅ **Session Management**: Secure session handling
-- ✅ **Account Lockout**: Protection against brute force attacks
-- ✅ **Input Validation**: Server-side validation for all inputs
-
----
-
-## 📱 User Experience Flow
-
-### Student Borrowing Journey
-
-```
-Login (/) 
-    ↓
-Student Dashboard (/studentdashboard)
-    ↓
-Browse Departments (/studentborrow)
-    ↓
-Select Department (e.g., /electronics)
-    ↓
-Add Items to Cart
-    ↓
-Review Cart (/cart)
-    ↓
-Verify Request (/verifyborrowlist)
-    ↓
-Submit for Approval
-    ↓
-Wait for Professor Approval
-    ↓
-Wait for Admin Processing
-    ↓
-Items Issued
-    ↓
-Return Items (via Admin)
-```
-
-### Professor Approval Journey
-
-```
-Login (/)
-    ↓
-Professor Dashboard (/professordashboard)
-    ↓
-View Pending Forms (/professorforms)
-    ↓
-Review Request Details
-    ↓
-Approve or Disapprove
-    ↓
-Form Sent to Admin (if approved)
-```
-
-### Administrator Processing Journey
-
-```
-Login (/)
-    ↓
-Admin Dashboard (/admindashboard)
-    ↓
-View Approved Forms (/adminforms)
-    ↓
-Verify Inventory Stock
-    ↓
-Issue Items (/adminissue)
-    ↓
-Items Borrowed by Student
-    ↓
-Process Returns (/adminreturns)
-    ↓
-Update Inventory
-```
-
----
-
-## 🛠️ Technical Implementation
-
-### Enhanced Navigation with State
-
-```csharp
-private async Task NavigateWithTransition(string url)
-{
-    isLoggingOut = true;
-    logoutButtonText = "Logging out...";
-    StateHasChanged();
-    
-    await Task.Delay(300);
-    
-    Navigation.NavigateTo(url, forceLoad: true);
-}
-```
-
-### Form State Management
-
-```csharp
-public class BorrowFormState
-{
-    public List<CartItem> CartItems { get; set; } = new();
-    public string StudentName { get; set; } = string.Empty;
-    public string StudentNumber { get; set; } = string.Empty;
-    public string SelectedProfessorEmail { get; set; } = string.Empty;
-    public bool IsValid => !HasErrors && CartItems.Any();
-    public Dictionary<string, string> Errors { get; set; } = new();
-    public bool HasErrors => Errors.Any();
-}
-```
-
-### Business Logic Layer
-
-**Cart Manager**
-
-```csharp
-public class CartManager
-{
-    private readonly AppDbContext _dbContext;
-    private readonly IInventoryService _inventoryService;
-    
-    public async Task<CartSummary> GetCartWithLimitsAsync(string userEmail)
-    {
-        // Get cart items with inventory limits
-        // Validate quantities against max per student
-        // Return summary with validation results
-    }
-}
-```
-
-**Borrow Manager**
-
-```csharp
-public class BorrowManager
-{
-    private readonly AppDbContext _dbContext;
-    
-    public async Task<(bool Success, string ReferenceCode, string Message)> 
-        CreateBorrowFormFromCartAsync(
-            string studentEmail,
-            string studentName,
-            string studentNumber,
-            string professorEmail)
-    {
-        // Generate unique reference code
-        // Create borrow form
-        // Convert cart items to form items
-        // Save to database
-        // Clear cart
-    }
-}
-```
-
----
-
-## 🎓 Key Learning Outcomes
-
-### Routing Concepts
-- ✅ **Declarative Routing**: Using `@page` directives
-- ✅ **Programmatic Navigation**: NavigationManager service
-- ✅ **Route Parameters**: Dynamic URL segments
-- ✅ **Route Constraints**: Type and pattern matching
-- ✅ **Role-Based Routing**: Conditional navigation based on user role
-
-### UI/UX Principles
-- ✅ **Progressive Enhancement**: Start basic, enhance gradually
-- ✅ **Mobile-First Design**: Design for smallest screen first
-- ✅ **Accessibility**: WCAG compliance and screen reader support
-- ✅ **Performance**: Minimize layout shifts and optimize animations
-- ✅ **Consistent Design System**: Unified color scheme and components
-
-### Modern Web Standards
-- ✅ **Semantic HTML**: Proper form structure and ARIA labels
-- ✅ **CSS Grid/Flexbox**: Modern layout techniques
-- ✅ **CSS Custom Properties**: Maintainable theming system
-- ✅ **Component-Based Architecture**: Reusable Razor components
-- ✅ **Server-Side Rendering**: Blazor Server for real-time updates
-
-### System Architecture
-- ✅ **Repository Pattern**: Data access abstraction
-- ✅ **Dependency Injection**: Loose coupling and testability
-- ✅ **Business Logic Separation**: Managers for complex operations
-- ✅ **Service Layer**: Reusable business services
-- ✅ **Entity Framework Core**: ORM for database operations
-
----
-
-## 🔐 Security Features
-
-### Authentication & Authorization
-- **Email Verification**: Required before account activation
-- **Password Hashing**: BCrypt with salt rounds
-- **Session Management**: Secure session handling
-- **Role-Based Access Control**: Different interfaces per role
-- **Account Lockout**: Protection against brute force attacks
-
-### Data Protection
-- **Input Validation**: Server-side validation for all inputs
-- **SQL Injection Prevention**: Parameterized queries via EF Core
-- **XSS Protection**: Built into Blazor Server
-- **CSRF Protection**: Antiforgery tokens
-
----
-
-## 📊 System Features
-
-### Inventory Management
-- Real-time stock tracking
-- Quantity limits per student
-- Automatic inventory updates on issue/return
-- Department-based organization
-
-### Borrowing Workflow
-- Multi-step approval process (Student → Professor → Admin)
-- Reference code generation for tracking
-- Status tracking throughout the process
-- Complete history records
-
-### User Experience
-- Modern, responsive design
-- Intuitive navigation
-- Real-time status updates
-- Clear visual feedback
-- Accessible interface
-
----
+# 🏛️ UE Engineering Borrowing System (UE-EBS)
+
+A comprehensive laboratory equipment and tool borrowing management system built with ASP.NET Core Blazor Server for the **University of the East (UE)**.
+
+A modern, user-friendly web application designed for managing toolroom inventory and equipment borrowing transactions. Students can browse items, create borrow requests, and track their borrowing history, while professors approve requests and administrators manage inventory, process borrows, and handle returns—all in real-time.
+
+## 🎯 Overview
+
+UTMS is an educational project demonstrating full-stack web development using ASP.NET Core Blazor Server and SQLite. It showcases essential concepts including:
+
+- 🏗️ Entity Framework Core for database operations
+- 🎨 Blazor Server for interactive, real-time UI
+- 👥 Role-based access control (Student, Professor, Administrator)
+- 💾 SQLite database with persistent data storage
+- 🔐 User authentication with email verification
+- 📧 Email service integration (Gmail SMTP)
+- 🔒 Password hashing with BCrypt
+- 🛡️ Account lockout security features
+- 📊 Borrow form workflow management
+- 🛒 Shopping cart functionality
+- 📦 Inventory management across multiple toolrooms
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- .NET 9.0 SDK
-- SQLite (included with EF Core)
-- SMTP server configuration (for email verification)
 
-### Installation
-1. Clone the repository
-2. Configure `appsettings.json` with database connection string
-3. Configure email settings in `EmailService.cs`
-4. Run `dotnet restore`
-5. Run `dotnet run`
+Before you begin, ensure you have the following installed:
 
-### Database Setup
-The database is automatically created on first run with:
-- User accounts table
-- Inventory items table
-- Borrow forms table
-- Cart items table
-- Verification codes table
+- **.NET 9 SDK** or higher
+- **Visual Studio Code** (recommended) or **Visual Studio 2022**
+- **Git** (optional, for cloning)
+- **Gmail account** (for email verification - configure in `appsettings.json`)
+
+### Installation Steps
+
+1. **Navigate to the project directory:**
+   ```bash
+   cd C:\Users\user\Group5
+   ```
+
+2. **Build the application:**
+   ```bash
+   dotnet build
+   ```
+
+3. **Configure Email Settings (Optional but Recommended):**
+   
+   Edit `appsettings.json` and update the email settings:
+   ```json
+   "EmailSettings": {
+     "SmtpServer": "smtp.gmail.com",
+     "SmtpPort": "587",
+     "SmtpUsername": "your-email@gmail.com",
+     "SmtpPassword": "your-app-password",
+     "FromEmail": "your-email@gmail.com",
+     "FromName": "University of the East - Borrowing System"
+   }
+   ```
+   
+   > **Note:** For Gmail, you'll need to generate an [App Password](https://support.google.com/accounts/answer/185833) if 2FA is enabled.
+
+4. **Run the application:**
+   ```bash
+   dotnet run
+   ```
+
+5. **Open in your browser:**
+   
+   The application will output a URL (typically `http://localhost:5000` or `http://localhost:5295`)
+   
+   Copy and paste the URL into your web browser
+
+6. **Access the application:**
+   
+   You'll be redirected to the Login page
+   
+   Use default admin/professor accounts or create a new student account
+
+## 📱 User Roles & Features
+
+### 🔐 Authentication
+
+#### Sign-Up (Create New Student Account)
+
+1. Click "Sign Up" on the login page
+2. Fill in the following information:
+   - **Username** - Unique identifier (min 3 characters, max 100)
+   - **Email Address** - Valid email for account verification
+   - **Full Name** - Your complete name (min 2 characters)
+   - **Student Number** - Your student identification number
+   - **Password** - Strong password (min 6 characters, must contain letter and number)
+   - **Confirm Password** - Must match the password above
+3. Click "Sign Up" button
+4. **Email Verification Required:**
+   - Check your email for verification code
+   - Enter the code on the verification page
+   - Account is activated after verification
+
+> **Note:** Administrator and Professor accounts cannot be created through signup. They are pre-seeded in the database.
+
+#### Login
+
+1. Enter your **Username** and **Password**
+2. Click "Login" button
+3. You'll be redirected to your role-specific dashboard:
+   - **Students** → Student Dashboard
+   - **Professors** → Professor Dashboard
+   - **Administrators** → Admin Dashboard
+
+#### Forgot Password
+
+1. Click "Forgot Password?" link on the login page
+2. Enter your email address
+3. Check your email for reset code
+4. Enter the reset code
+5. Create a new password
+
+#### Account Security
+
+- **Account Lockout:** After 5 failed login attempts, account is locked for 15 minutes
+- **Password Hashing:** All passwords are hashed using BCrypt
+- **Email Verification:** Required for all new student accounts
+
+### 👨‍🎓 Student Portal
+
+The student dashboard provides a complete borrowing management system.
+
+#### 📊 Dashboard
+
+- **Welcome page** with service overview
+- **Status tracking:**
+  - Pending forms awaiting professor approval
+  - Currently borrowed items
+  - Returned items history
+- **Quick navigation** to key features
+- **System announcements** from administrators
+
+#### 🛒 Borrow Items
+
+Create a new borrow request with these steps:
+
+1. **Select Department/Toolroom:**
+   - Civil Engineering Toolroom
+   - Electronics Engineering Toolroom
+   - Chemistry Laboratory Toolroom
+   - Electrical Engineering Toolroom
+   - Physics Laboratory Toolroom
+
+2. **Browse Available Items:**
+   - View item descriptions and specifications
+   - Check available quantities
+   - See maximum borrow limit per student
+
+3. **Add Items to Cart:**
+   - Select items and quantities
+   - Respect maximum per-student limits
+   - Add multiple items from different departments
+
+4. **Submit Borrow Form:**
+   - Enter **Subject Code** (e.g., CE101, ECE201)
+   - Enter **Professor Email** (must be registered professor)
+   - Review items in cart
+   - Submit for professor approval
+
+5. **Form Submission:**
+   - Receive unique **Reference Code** for tracking
+   - Form sent to professor for approval
+   - Email notification sent to professor
+
+#### 🛒 Cart
+
+- View all items added to cart
+- Adjust quantities before submission
+- Remove items from cart
+- Check availability before submitting
+
+#### 📋 History
+
+View all your past and current borrow requests:
+
+- **Pending Forms** - Awaiting professor approval
+- **Approved Forms** - Approved by professor, awaiting admin processing
+- **Issued Items** - Currently borrowed items
+- **Returned Items** - Completed borrows
+- **Rejected Forms** - Forms rejected with reasons
+
+Track detailed information:
+- Reference Code and creation date
+- Items requested (department, item name, quantity)
+- Professor assigned
+- Current status
+- Processing dates
+
+### 👨‍🏫 Professor Portal
+
+Comprehensive form approval system for faculty members.
+
+#### 📊 Dashboard
+
+- **Overview statistics:**
+  - Total pending forms
+  - Approved forms count
+  - Rejected forms count
+  - Forms processed today
+
+#### 📋 Pending Forms
+
+Review and approve student borrow requests:
+
+1. **View Form Details:**
+   - Student information (name, student number, email)
+   - Subject code
+   - Items requested with quantities
+   - Submission date
+
+2. **Approve or Reject:**
+   - **Approve:** Form sent to administrator for final processing
+   - **Reject:** Provide rejection reason (optional)
+   - Email notifications sent to student
+
+3. **Form History:**
+   - View all forms you've processed
+   - Track approval/rejection history
+   - Filter by status
+
+### 👨‍💼 Administrator Portal
+
+Complete system management for administrators.
+
+#### 📊 System Overview
+
+- **System statistics:**
+  - Total users (students, professors, admins)
+  - Total borrow forms
+  - Pending approvals
+  - Active borrows
+  - Inventory status
+
+- **Announcement Management:**
+  - Post system-wide notices
+  - Update announcements visible to all users
+
+#### 📋 All Forms
+
+Complete borrow form management:
+
+- **View All Forms:**
+  - Table displaying all borrow forms
+  - Shows: Reference Code, Student Name, Subject Code, Professor, Status, Dates
+  - Filter by status (Pending, Approved, Rejected, Issued, Returned)
+
+- **Form Details:**
+  - Student information and contact details
+  - Items requested (department, item name, quantity)
+  - Professor who approved
+  - Current status and timeline
+
+- **Form Actions:**
+  - View detailed information
+  - Process approved forms
+  - Reject forms with reasons
+
+#### 📦 Stock Management
+
+Inventory management across all toolrooms:
+
+- **View Inventory:**
+  - Browse items by department
+  - See total quantity, available quantity
+  - Check maximum per-student limits
+  - View item descriptions
+
+- **Add New Items:**
+  - Select department/toolroom
+  - Enter item name and description
+  - Set total quantity and max per student
+  - Activate/deactivate items
+
+- **Update Inventory:**
+  - Modify item quantities
+  - Update descriptions
+  - Adjust max per-student limits
+  - Mark items as active/inactive
+
+#### 📤 Issue Items
+
+Process approved borrow forms:
+
+1. **View Approved Forms:**
+   - Forms approved by professors
+   - Ready for item issuance
+
+2. **Issue Items:**
+   - Verify item availability
+   - Update inventory quantities
+   - Mark form as "Issued"
+   - Record issue date and admin
+
+3. **Official Borrow List:**
+   - Generate official borrow records
+   - Track issued items
+   - Maintain audit trail
+
+#### 🔄 Returns
+
+Handle item returns:
+
+1. **View Issued Items:**
+   - Currently borrowed items
+   - Student information
+   - Items borrowed
+
+2. **Process Returns:**
+   - Verify returned items
+   - Update inventory (restore quantities)
+   - Mark form as "Returned"
+   - Record return date
+
+3. **Return History:**
+   - Track all returns
+   - View return dates
+   - Monitor item condition
+
+#### 👥 View Users
+
+User management and database viewer:
+
+- **View All Users:**
+  - Students, Professors, Administrators
+  - User details (name, email, username, role)
+  - Account creation dates
+  - Email verification status
+
+- **User Statistics:**
+  - Total users by role
+  - Active accounts
+  - Verified accounts
+
+## 🗄️ Database Structure
+
+### SQLite Database
+
+- **Location:** `app.db` in the application directory
+- **Type:** SQLite (file-based, no server required)
+- **ORM:** Entity Framework Core 9.0
+
+### Database Tables
+
+#### Users Table
+
+Stores user account information for authentication and profiles.
+
+```sql
+CREATE TABLE Users (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT NOT NULL UNIQUE,
+    Email TEXT NOT NULL UNIQUE,
+    PasswordHash TEXT NOT NULL,
+    Role TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    StudentNumber TEXT NOT NULL,
+    CreatedAtUtc DATETIME NOT NULL,
+    IsEmailVerified INTEGER NOT NULL DEFAULT 0,
+    FailedLoginAttempts INTEGER NOT NULL DEFAULT 0,
+    LockedUntil TEXT
+);
+```
+
+| Column | Type | Description | Constraints |
+|--------|------|-------------|-------------|
+| Id | INTEGER | Unique user identifier | PRIMARY KEY, AUTO INCREMENT |
+| Username | TEXT | Unique login identifier | NOT NULL, UNIQUE, Max 100 chars |
+| Email | TEXT | Email address | NOT NULL, UNIQUE, Max 100 chars |
+| PasswordHash | TEXT | BCrypt hashed password | NOT NULL, Max 255 chars |
+| Role | TEXT | User role (Student/Professor/Administrator) | NOT NULL |
+| Name | TEXT | User's full name | NOT NULL, Max 100 chars |
+| StudentNumber | TEXT | Student ID (empty for non-students) | Max 50 chars |
+| CreatedAtUtc | DATETIME | Account creation timestamp | NOT NULL |
+| IsEmailVerified | INTEGER | Email verification status | NOT NULL, DEFAULT 0 |
+| FailedLoginAttempts | INTEGER | Failed login counter | NOT NULL, DEFAULT 0 |
+| LockedUntil | TEXT | Account lockout expiration | NULLABLE |
+
+#### InventoryItems Table
+
+Records all equipment and tools available in toolrooms.
+
+```sql
+CREATE TABLE InventoryItems (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Department TEXT NOT NULL,
+    ItemName TEXT NOT NULL,
+    Description TEXT NOT NULL,
+    TotalQuantity INTEGER NOT NULL,
+    AvailableQuantity INTEGER NOT NULL,
+    MaxPerStudent INTEGER NOT NULL,
+    IsActive INTEGER NOT NULL DEFAULT 1,
+    CreatedAt TEXT NOT NULL,
+    LastUpdated TEXT NOT NULL
+);
+```
+
+| Column | Type | Description | Constraints |
+|--------|------|-------------|-------------|
+| Id | INTEGER | Unique item identifier | PRIMARY KEY, AUTO INCREMENT |
+| Department | TEXT | Toolroom/department name | NOT NULL |
+| ItemName | TEXT | Item name | NOT NULL |
+| Description | TEXT | Item description | NOT NULL |
+| TotalQuantity | INTEGER | Total stock quantity | NOT NULL, >= 0 |
+| AvailableQuantity | INTEGER | Currently available quantity | NOT NULL, >= 0 |
+| MaxPerStudent | INTEGER | Maximum borrow limit per student | NOT NULL, >= 1 |
+| IsActive | INTEGER | Active status flag | NOT NULL, DEFAULT 1 |
+| CreatedAt | DATETIME | Item creation timestamp | NOT NULL |
+| LastUpdated | DATETIME | Last update timestamp | NOT NULL |
+
+#### BorrowForms Table
+
+Records all student borrow requests.
+
+```sql
+CREATE TABLE BorrowForms (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ReferenceCode TEXT NOT NULL UNIQUE,
+    StudentName TEXT NOT NULL,
+    StudentNumber TEXT NOT NULL,
+    StudentEmail TEXT NOT NULL,
+    ProfessorEmail TEXT NOT NULL,
+    SubjectCode TEXT NOT NULL,
+    SubmittedAt TEXT NOT NULL,
+    IsApproved INTEGER,
+    ProcessedAt TEXT,
+    ProcessedBy TEXT NOT NULL DEFAULT '',
+    RejectionReason TEXT NOT NULL DEFAULT '',
+    IsIssued INTEGER NOT NULL DEFAULT 0,
+    IsReturned INTEGER NOT NULL DEFAULT 0
+);
+```
+
+| Column | Type | Description | Constraints |
+|--------|------|-------------|-------------|
+| Id | INTEGER | Unique form identifier | PRIMARY KEY, AUTO INCREMENT |
+| ReferenceCode | TEXT | Unique reference code | NOT NULL, UNIQUE |
+| StudentName | TEXT | Student's full name | NOT NULL |
+| StudentNumber | TEXT | Student ID | NOT NULL |
+| StudentEmail | TEXT | Student email | NOT NULL |
+| ProfessorEmail | TEXT | Professor email | NOT NULL |
+| SubjectCode | TEXT | Course/subject code | NOT NULL |
+| SubmittedAt | DATETIME | Form submission timestamp | NOT NULL |
+| IsApproved | INTEGER | Approval status (NULL/Pending, 1/Approved, 0/Rejected) | NULLABLE |
+| ProcessedAt | DATETIME | Processing timestamp | NULLABLE |
+| ProcessedBy | TEXT | Admin who processed | DEFAULT '' |
+| RejectionReason | TEXT | Rejection reason if rejected | DEFAULT '' |
+| IsIssued | INTEGER | Item issuance status | NOT NULL, DEFAULT 0 |
+| IsReturned | INTEGER | Return status | NOT NULL, DEFAULT 0 |
+
+#### BorrowFormItems Table
+
+Items requested in each borrow form.
+
+```sql
+CREATE TABLE BorrowFormItems (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Department TEXT NOT NULL,
+    ItemName TEXT NOT NULL,
+    Quantity INTEGER NOT NULL,
+    BorrowFormId INTEGER NOT NULL,
+    FOREIGN KEY (BorrowFormId) REFERENCES BorrowForms(Id) ON DELETE CASCADE
+);
+```
+
+#### CartItems Table
+
+Temporary cart storage for students.
+
+```sql
+CREATE TABLE CartItems (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Department TEXT NOT NULL,
+    ItemName TEXT NOT NULL,
+    Quantity INTEGER NOT NULL,
+    UserEmail TEXT NOT NULL
+);
+```
+
+#### OfficialBorrowListRecords Table
+
+Official records of issued items.
+
+```sql
+CREATE TABLE OfficialBorrowListRecords (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    StudentName TEXT NOT NULL,
+    StudentNumber TEXT NOT NULL,
+    ReferenceCode TEXT NOT NULL,
+    ProfessorInCharge TEXT NOT NULL,
+    BorrowDate TEXT NOT NULL,
+    Status TEXT NOT NULL,
+    UserEmail TEXT NOT NULL
+);
+```
+
+#### BorrowedItems Table
+
+Items associated with official borrow records.
+
+```sql
+CREATE TABLE BorrowedItems (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ItemName TEXT NOT NULL,
+    Department TEXT NOT NULL,
+    Quantity INTEGER NOT NULL,
+    OfficialBorrowListRecordId INTEGER NOT NULL,
+    FOREIGN KEY (OfficialBorrowListRecordId) REFERENCES OfficialBorrowListRecords(Id)
+);
+```
+
+#### VerificationCodes Table
+
+Email verification and password reset codes.
+
+```sql
+CREATE TABLE VerificationCodes (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Email TEXT NOT NULL,
+    Code TEXT NOT NULL,
+    CreatedAt TEXT NOT NULL,
+    ExpiresAt TEXT NOT NULL,
+    IsUsed INTEGER NOT NULL DEFAULT 0
+);
+```
+
+#### TempSignups Table
+
+Temporary storage for unverified signups.
+
+```sql
+CREATE TABLE TempSignups (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Email TEXT NOT NULL,
+    Username TEXT NOT NULL,
+    PasswordHash TEXT NOT NULL,
+    Role TEXT NOT NULL,
+    Name TEXT NOT NULL,
+    StudentNumber TEXT NOT NULL,
+    CreatedAt TEXT NOT NULL
+);
+```
+
+## 🏗️ Project Structure
+
+```
+Group5/
+├── Components/
+│   ├── _Imports.razor                  # Global component imports
+│   ├── App.razor                       # Root application component
+│   ├── Routes.razor                    # Application routing configuration
+│   │
+│   ├── Layout/
+│   │   ├── MainLayout.razor            # Default layout for auth pages
+│   │   └── MainLayout.razor.css        # Main layout styles
+│   │
+│   └── Pages/
+│       ├── Error.razor                 # Error page (500, etc.)
+│       │
+│       ├── Auth/                       # Authentication pages
+│       │   ├── Home.razor              # Login page
+│       │   ├── Signup.razor            # Sign-up/registration page
+│       │   ├── VerifyEmail.razor       # Email verification page
+│       │   ├── ForgotPassword.razor    # Password recovery request
+│       │   ├── VerifyResetCode.razor   # Reset code verification
+│       │   └── ResetPassword.razor     # Password reset page
+│       │
+│       ├── Base/                       # Base page classes
+│       │   ├── BasePage.cs             # Base page component
+│       │   ├── BaseAdminPage.cs        # Admin page base class
+│       │   └── BaseToolroomPage.cs     # Toolroom page base class
+│       │
+│       ├── Admin/                      # Admin-only pages
+│       │   ├── AdminDashboard.razor    # Admin overview dashboard
+│       │   ├── AdminForms.razor        # All borrow forms management
+│       │   ├── AdminStock.razor        # Inventory management
+│       │   ├── AdminIssue.razor        # Item issuance
+│       │   ├── AdminReturns.razor      # Return processing
+│       │   ├── AdminHistory.razor      # Borrow history
+│       │   ├── AdminItems.razor        # Item management
+│       │   ├── OfficialBorrowList.razor # Official borrow records
+│       │   ├── VerifyBorrowList.razor  # Borrow list verification
+│       │   └── ViewDatabase.razor      # User database viewer
+│       │
+│       ├── Professor/                  # Professor-only pages
+│       │   ├── ProfessorDashboard.razor # Professor overview
+│       │   └── ProfessorForms.razor    # Form approval management
+│       │
+│       ├── Students/                   # Student-only pages
+│       │   ├── StudentDashboard.razor  # Student overview
+│       │   ├── StudentBorrow.razor     # Browse and borrow items
+│       │   ├── Cart.razor              # Shopping cart
+│       │   ├── StudentHistory.razor    # Borrow history
+│       │   ├── CE.razor                # Civil Engineering toolroom
+│       │   ├── ECE.razor               # Electronics Engineering toolroom
+│       │   ├── EE.razor                # Electrical Engineering toolroom
+│       │   ├── CHEM.razor              # Chemistry Laboratory toolroom
+│       │   └── P6.razor                # Physics Laboratory toolroom
+│       │
+│       └── Shared/                     # Shared pages
+│           ├── Aboutus.razor           # About page
+│           ├── Help.razor              # Help and FAQ page
+│           └── Error.razor             # Error page
+│
+├── Data/
+│   ├── AppDbContext.cs                 # Entity Framework database context
+│   └── Repositories/
+│       ├── IRepository.cs              # Generic repository interface
+│       ├── Repository.cs               # Generic repository implementation
+│       ├── IInventoryRepository.cs     # Inventory repository interface
+│       └── InventoryRepository.cs      # Inventory repository implementation
+│
+├── Models/
+│   ├── User.cs                         # User entity
+│   ├── InventoryItem.cs                # Inventory item entity
+│   ├── BorrowForm.cs                   # Borrow form entity
+│   ├── BorrowFormItem.cs               # Borrow form item entity
+│   ├── CartItem.cs                     # Cart item entity
+│   ├── BorrowedItem.cs                 # Borrowed item entity
+│   ├── OfficialBorrowListRecord.cs     # Official borrow record entity
+│   ├── TempSignup.cs                   # Temporary signup entity
+│   └── VerificationCode.cs             # Verification code entity
+│
+├── Services/
+│   ├── EmailService.cs                 # Email sending service
+│   ├── Interfaces/
+│   │   ├── IEmailService.cs            # Email service interface
+│   │   └── IInventoryService.cs        # Inventory service interface
+│   ├── InventoryService.cs             # Inventory management service
+│   ├── Business/
+│   │   ├── CartManager.cs              # Cart management logic
+│   │   └── BorrowManager.cs            # Borrow workflow logic
+│   └── Helpers/
+│       └── SecurityHelper.cs           # Security utilities (hashing, validation)
+│
+├── Shared/
+│   ├── UserSession.cs                  # User session management
+│   └── UserDatabase.cs                 # Static user database utilities
+│
+├── Properties/
+│   └── launchSettings.json             # Application launch configuration
+│
+├── wwwroot/
+│   ├── app.css                         # Global styles
+│   ├── css/
+│   │   ├── admin-modern.css            # Admin-specific styles
+│   │   └── shared-auth.css             # Authentication page styles
+│   └── images/
+│       ├── UE.png                      # University logo
+│       ├── ENLOGO.png                  # Engineering logo
+│       └── Apparatus/                  # Equipment images
+│           ├── Chemistry/
+│           ├── Civil Engineering/
+│           ├── Electrical/
+│           ├── Electronics/
+│           └── Physics/
+│
+├── Program.cs                          # Application startup configuration
+├── Group5.csproj                       # Project file
+├── appsettings.json                    # Application settings
+├── appsettings.Development.json        # Development-specific settings
+└── app.db                              # SQLite database file
+```
+
+## 🔧 Core Application Files
+
+### Program.cs
+
+Application startup and dependency injection configuration:
+
+- Razor Components and Interactive Server Components
+- SQLite database connection
+- DbContext registration (AppDbContext)
+- Email service registration
+- Inventory service registration
+- Repository pattern registration
+- Business logic managers (CartManager, BorrowManager)
+- Database initialization and seeding
+- Default admin and professor accounts
+- Inventory items seeding
+
+### AppDbContext.cs (Data/AppDbContext.cs)
+
+Entity Framework Core database context:
+
+```csharp
+public class AppDbContext : DbContext
+{
+    public DbSet<User> Users { get; set; }
+    public DbSet<InventoryItem> InventoryItems { get; set; }
+    public DbSet<BorrowForm> BorrowForms { get; set; }
+    public DbSet<BorrowFormItem> BorrowFormItems { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<BorrowedItem> BorrowedItems { get; set; }
+    public DbSet<OfficialBorrowListRecord> OfficialBorrowListRecords { get; set; }
+    public DbSet<VerificationCode> VerificationCodes { get; set; }
+    public DbSet<TempSignup> TempSignups { get; set; }
+}
+```
+
+### Models
+
+#### User.cs
+Represents a user account (Student, Professor, or Administrator)
+- Properties: Username, Email, PasswordHash, Role, Name, StudentNumber, CreatedAtUtc, IsEmailVerified, FailedLoginAttempts, LockedUntil
+- Validations: Required fields, unique constraints
+
+#### InventoryItem.cs
+Represents equipment/tool in toolroom inventory
+- Properties: Department, ItemName, Description, TotalQuantity, AvailableQuantity, MaxPerStudent, IsActive, CreatedAt, LastUpdated
+- Tracks: Stock levels, availability, borrowing limits
+
+#### BorrowForm.cs
+Represents a student borrow request
+- Properties: ReferenceCode, StudentName, StudentNumber, StudentEmail, ProfessorEmail, SubjectCode, SubmittedAt, IsApproved, ProcessedAt, ProcessedBy, RejectionReason, IsIssued, IsReturned
+- Workflow: Pending → Approved/Rejected → Issued → Returned
+
+#### BorrowFormItem.cs
+Items requested in a borrow form
+- Properties: Department, ItemName, Quantity, BorrowFormId
+- Relationship: Many-to-one with BorrowForm
+
+### Services
+
+#### EmailService.cs
+Email sending service using SMTP:
+- Send verification codes for signup
+- Send password reset codes
+- Send form approval/rejection notifications
+- Configured via appsettings.json
+
+#### SecurityHelper.cs
+Security utilities:
+- Password hashing with BCrypt
+- Password strength validation
+- Email format validation
+- Verification code generation
+- Account lockout management
+- Philippines timezone handling
+
+#### CartManager.cs
+Shopping cart management:
+- Add items to cart
+- Remove items from cart
+- Update quantities
+- Clear cart after form submission
+
+#### BorrowManager.cs
+Borrow workflow management:
+- Form submission logic
+- Inventory availability checking
+- Quantity validation
+- Reference code generation
+
+## 🎨 Layout & Styling
+
+### Layout Components
+
+#### MainLayout.razor
+Used for login, signup, and authentication pages:
+- University branding (UE logo and colors)
+- Navigation links (Home, Help, About Us)
+- Responsive design
+
+### Styling
+
+- **Global Styles:** `wwwroot/app.css`
+- **Admin Styles:** `wwwroot/css/admin-modern.css`
+- **Auth Styles:** `wwwroot/css/shared-auth.css`
+- **Framework:** Custom CSS with modern design
+- **Color Scheme:** University of the East red (#8B0000)
+
+## 🔐 Security Features
+
+### Authentication
+
+- Username/password-based login
+- Unique username and email validation
+- **BCrypt password hashing** (secure password storage)
+- Email verification required for new accounts
+- Account lockout after 5 failed attempts (15-minute lockout)
+
+### Authorization
+
+- Role-based access control (Student, Professor, Administrator)
+- Page-level authorization checks
+- Admin pages only accessible to administrators
+- Professor pages only accessible to professors
+- Student pages only accessible to students
+
+### Data Validation
+
+- Model-level validation via data annotations
+- Client-side validation in forms
+- Server-side validation on submit
+- Password strength requirements (min 6 chars, letter + number)
+- Email format validation
+- Quantity limits enforcement
+
+### Best Practices
+
+- Unique constraints on username and email
+- Password hashing with BCrypt
+- Account lockout protection
+- Email verification for account activation
+- Secure session management
+- SQL injection protection via EF Core parameterized queries
+
+## 📊 Key Features
+
+### 🛒 Borrow Management
+
+- Browse items across 5 toolrooms
+- Add items to cart
+- Submit borrow forms with professor assignment
+- Track form status in real-time
+- View borrow history
+
+### 📋 Form Workflow
+
+1. **Student submits form** → Status: Pending
+2. **Professor reviews** → Approve/Reject
+3. **If approved** → Status: Approved (sent to admin)
+4. **Admin processes** → Status: Issued
+5. **Items returned** → Status: Returned
+
+### 📦 Inventory Management
+
+- Add/edit/remove inventory items
+- Track total and available quantities
+- Set maximum per-student limits
+- Activate/deactivate items
+- Multi-department support
+
+### 💬 Email Notifications
+
+- Signup verification codes
+- Password reset codes
+- Form approval notifications
+- Form rejection notifications (with reasons)
+
+### 🌐 Real-Time Updates
+
+- Blazor Server provides live UI updates
+- No page refresh needed
+- Instant feedback from server
+- Real-time status updates
+
+## 🛠️ Technologies & Dependencies
+
+### Core Framework
+
+- **ASP.NET Core 9.0**
+- **Blazor Server**
+- **Entity Framework Core 9.0**
+
+### Database
+
+- **SQLite** (lightweight, file-based)
+
+### Frontend
+
+- **Razor Components**
+- **HTML5 / CSS3**
+- **JavaScript Interop** (for client-side interactions)
+
+### Additional Libraries
+
+- **Microsoft.EntityFrameworkCore.Sqlite** (9.0.10)
+- **BCrypt.Net-Next** (4.0.3) - Password hashing
+
+## 🚨 Troubleshooting
+
+### Port Already in Use Error
+
+If you see: `"Failed to bind to address http://127.0.0.1:5295: address already in use"`
+
+**Solution:**
+
+1. **Option 1:** Change the port in `launchSettings.json`
+   - Edit `Properties/launchSettings.json` and change port to 5296 or 5297
+
+2. **Option 2:** Kill the process using the port
+   ```bash
+   # Find the process ID (PID) using the port
+   netstat -ano | findstr :5295
+   
+   # Kill the process (replace PID with actual process ID)
+   taskkill /PID <PID> /F
+   
+   # Then run again
+   dotnet run
+   ```
+
+### Database Issues
+
+If the database appears corrupted:
+
+```bash
+# Delete the database file
+Remove-Item app.db
+
+# Run the application again
+dotnet run
+
+# This will recreate the database with proper schema and seed data
+```
+
+### Email Configuration Issues
+
+If email verification is not working:
+
+1. **Check appsettings.json:**
+   - Verify SMTP settings are correct
+   - For Gmail, use App Password (not regular password)
+   - Enable "Less secure app access" or use App Password
+
+2. **Test Email Service:**
+   - Check console for email sending errors
+   - Verify network connectivity
+   - Check firewall settings
+
+### Login Issues
+
+- Ensure you created an account via the Sign-Up page (for students)
+- Check that your username and password match exactly (case-sensitive)
+- Verify email is verified (check email for verification code)
+- Check if account is locked (wait 15 minutes after 5 failed attempts)
+- Use default admin/professor accounts if available:
+  - Admin: `admin1` / `Admin123!`
+  - Professor: Check seeded accounts in Program.cs
+
+### Form Submission Issues
+
+- Ensure all required fields are filled
+- Check that professor email is registered in system
+- Verify item availability (check stock)
+- Confirm quantities don't exceed max per-student limits
+- Check that items are active in inventory
+
+## 📚 Learning Objectives
+
+This project is designed to teach:
+
+### Web Development
+- Building interactive web applications with Blazor
+- Real-time updates without page refresh
+- Server-side rendering with .NET
+- Component-based architecture
+
+### Object-Oriented Programming
+- Entity models (User, InventoryItem, BorrowForm classes)
+- Encapsulation and abstraction
+- Inheritance (BasePage, BaseAdminPage)
+- Polymorphism (virtual/override methods)
+- Repository pattern
+
+### Database Design
+- Relational database structure
+- Entity relationships (one-to-many, foreign keys)
+- Data integrity and constraints
+- ACID principles
+- Database migrations
+
+### Back-End Development
+- Entity Framework Core ORM
+- CRUD operations (Create, Read, Update, Delete)
+- Repository pattern implementation
+- Dependency injection
+- Service layer architecture
+
+### Software Engineering
+- Project structure and organization
+- Code reusability
+- Error handling and logging
+- User experience design
+- Security best practices
+- Email service integration
+
+## 🎓 Best Practices Demonstrated
+
+✅ Separation of concerns (Models, Data, Services, Components)  
+✅ Dependency Injection (DI) container  
+✅ Repository pattern for data access  
+✅ Service layer for business logic  
+✅ Model validation using data annotations  
+✅ Role-based authorization  
+✅ Error handling with try-catch blocks  
+✅ User-friendly error messages  
+✅ Real-time UI updates  
+✅ Clean, readable code structure  
+✅ Password hashing with BCrypt  
+✅ Account lockout security  
+✅ Email verification workflow  
+
+## 📝 Development Notes
+
+### Adding New Features
+
+1. Create entity model in `Models/` folder
+2. Add `DbSet` to `AppDbContext.cs`
+3. Create Razor component in `Components/Pages/`
+4. Update routes in `Routes.razor` (if needed)
+5. Add business logic in `Services/` if needed
+6. Test thoroughly before deployment
+
+### Database Migrations (When Needed)
+
+```bash
+# Install EF Core tools (if not already installed)
+dotnet tool install --global dotnet-ef
+
+# Create migration
+dotnet ef migrations add MigrationName
+
+# Apply migration
+dotnet ef database update
+```
+
+### Debugging
+
+- Use Visual Studio Code debugger with C# extension
+- Set breakpoints and step through code
+- Check browser console for client-side errors
+- Review application logs for server errors
+- Use `Console.WriteLine()` for debugging output
+
+## 🚀 Deployment
+
+### Build for Production
+
+```bash
+dotnet build --configuration Release
+```
+
+### Publish Application
+
+```bash
+dotnet publish --configuration Release --output ./publish
+```
+
+### Run Published Version
+
+```bash
+cd publish
+dotnet Group5.dll
+```
+
+## 📞 Support & Resources
+
+### Documentation
+
+- [ASP.NET Core Documentation](https://docs.microsoft.com/aspnet/core)
+- [Blazor Server Documentation](https://docs.microsoft.com/aspnet/core/blazor)
+- [Entity Framework Core](https://docs.microsoft.com/ef/core)
+- [SQLite Documentation](https://www.sqlite.org/docs.html)
+- [BCrypt.Net Documentation](https://github.com/BcryptNet/bcrypt.net)
+
+### Common Issues
+
+- Check the Troubleshooting section above
+- Review application logs
+- Verify all prerequisites are installed
+- Ensure .NET SDK 9.0 or higher is installed
+- Check email configuration in appsettings.json
+
+## 📄 License
+
+This project is for educational purposes. Use and modify as needed for learning.
+
+## ✨ Future Enhancements
+
+Potential features to add:
+
+- 📧 Email notifications for form status changes
+- 📊 Advanced reporting and analytics
+- 🔔 Real-time notifications (SignalR)
+- 📱 Mobile-responsive design improvements
+- 🗓️ Due date tracking and reminders
+- 📸 Item image uploads
+- 🔍 Advanced search and filtering
+- 📈 Usage statistics and reports
+- 🌐 Multi-language support
+- 🔄 Automatic inventory restocking alerts
+- 📋 Bulk operations for admins
+- 🎨 Customizable themes
+
+## 🤝 Contributing
+
+Feel free to fork, modify, and improve this project for educational purposes!
+
+## 📅 Project Information
+
+- **Framework:** ASP.NET Core 9.0 Blazor Server
+- **Database:** SQLite
+- **Language:** C# with Razor
+- **Purpose:** Educational - Learning C# web development
+- **Institution:** University of the East (UE)
+
+## 🚨 Important Links
+
+- **Figma** - [Design Mockups](#) *(Add your Figma link)*
+- **UML** - [System Design](#) *(Add your UML diagram link)*
+- **Logo** - [University Logo](#) *(Add your logo link)*
 
 ---
 
-## 📝 Notes
+Thank you for using UTMS!
 
-- The system uses **Blazor Server** for real-time interactivity
-- **Entity Framework Core** with SQLite for data persistence
-- **Repository Pattern** for data access abstraction
-- **Dependency Injection** throughout the application
-- **Session-based authentication** with secure session management
+**Built with ❤️ for learning and development**
 
----
+*University of the East - Engineering Toolroom Management System*
 
-*This system was developed to modernize and improve the borrowing process for engineering laboratory tools at the University of the East - Caloocan.*
